@@ -30,7 +30,8 @@ jobs:
         uses: ./actions/aws-param-to-env
         id: AWSParamTest
         with:
-          param-store-base-paths: /test
+          param-store-base-paths: '/test'
+          decrypt-secure-strings: 'true'
 
       - name: Test GITHUB environment variables
         run: echo ${{ env.API_KEY }}

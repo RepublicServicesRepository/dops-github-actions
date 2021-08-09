@@ -5,12 +5,14 @@ const ssm = new aws.SSM();
 async function main() {
   try {
     console.log("Begin AWS Param To Env");
+    const decryptSecureStrings =
+      core.getInput("decrypt-secure-strings") === "true";
     const paramStoreBasePathInput = core.getInput("param-store-base-paths", {
       required: true,
     });
     const paramStoreBasePaths = paramStoreBasePathInput.split(",");
     for (const basePath of paramStoreBasePaths) {
-      const parameters = await getParamsByPath(basePath);
+      const parameters = await getParamsByPath(basePath, decryptSecureStrings);
       setParamsInEnvironment(basePath, parameters);
     }
     console.log("End AWS Param To Env");
@@ -19,7 +21,7 @@ async function main() {
   }
 }
 
-async function getParamsByPath(path) {
+async function getParamsByPath(path, decrypt) {
   const parameters = [];
   let ssmResult;
   let NextToken;
@@ -30,7 +32,7 @@ async function getParamsByPath(path) {
         NextToken,
         Path: path,
         Recursive: true,
-        WithDecryption: false, // anything important enough to be encrypted is left out, for now
+        WithDecryption: decrypt,
       })
       .promise();
 
@@ -52,13 +54,13 @@ async function getParamsByPath(path) {
  */
 async function setParamsInEnvironment(path, params) {
   for (const param of params) {
+    const shortName = param.Name.replace(path, "");
+    const unixName = shortName
+      .replace(/^\//, "")
+      .replace(/\//g, "_")
+      .toUpperCase();
+    process.env[unixName] = param.Value;
     if (param.Type !== "SecureString") {
-      const shortName = param.Name.replace(path, "");
-      const unixName = shortName
-        .replace(/^\//, "")
-        .replace(/\//g, "_")
-        .toUpperCase();
-      process.env[unixName] = param.Value;
       console.log(
         `parameter loaded: ${shortName} :: ${unixName} -- ${param.Value}`
       );
