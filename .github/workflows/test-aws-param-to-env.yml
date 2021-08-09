@@ -1,5 +1,3 @@
-on: [push]
-
 # Controls when the action will run. Triggers the workflow after a git push.
 on: push
 
