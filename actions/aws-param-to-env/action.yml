@@ -1,5 +1,12 @@
 name: 'AWS Params to ENV'
 description: 'Convert AWS Param Store values into ENV variables'
+inputs:
+  param-store-base-paths:
+    description: 'Comma delimited list of base paths for the Param Store.'
+    required: true
+  decrypt-secure-strings:
+    description: 'Optional flag to decrypt SecureString values. Set to true if desired and the value will cascade to the AWS call.'
+    required: false
 runs:
   using: 'node12'
   main: 'index.js'

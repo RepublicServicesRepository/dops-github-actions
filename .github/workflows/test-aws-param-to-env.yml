@@ -27,8 +27,8 @@ jobs:
         uses: ./actions/aws-param-to-env
         id: AWSParamTest
         with:
-          param-store-base-paths: '/test'
-          decrypt-secure-strings: 'true'
+          param-store-base-paths: /test
+          decrypt-secure-strings: true
 
       # Test the outcome in the GITHUB env.
       # Be careful with this, as the values will end up in your Action logs.
