@@ -2,19 +2,21 @@ const core = require("@actions/core");
 const aws = require("aws-sdk");
 const ssm = new aws.SSM();
 
-try {
-  console.log("Begin AWS Param To Env");
-  const paramStoreBasePathInput = core.getInput("param-store-base-paths", {
-    required: true,
-  });
-  const paramStoreBasePaths = paramStoreBasePathInput.split(",");
-  for (const basePath of paramStoreBasePaths) {
-    const parameters = await getParamsByPath(basePath);
-    setParamsInEnvironment(basePath, parameters);
+async function main() {
+  try {
+    console.log("Begin AWS Param To Env");
+    const paramStoreBasePathInput = core.getInput("param-store-base-paths", {
+      required: true,
+    });
+    const paramStoreBasePaths = paramStoreBasePathInput.split(",");
+    for (const basePath of paramStoreBasePaths) {
+      const parameters = await getParamsByPath(basePath);
+      setParamsInEnvironment(basePath, parameters);
+    }
+    console.log("End AWS Param To Env");
+  } catch (error) {
+    core.setFailed(error.message);
   }
-  console.log("End AWS Param To Env");
-} catch (error) {
-  core.setFailed(error.message);
 }
 
 async function getParamsByPath(path) {
@@ -28,7 +30,7 @@ async function getParamsByPath(path) {
         NextToken,
         Path: path,
         Recursive: true,
-        WithDecryption: false,  // anything important enough to be encrypted is left out, for now
+        WithDecryption: false, // anything important enough to be encrypted is left out, for now
       })
       .promise();
 
@@ -61,3 +63,5 @@ async function setParamsInEnvironment(path, params) {
     );
   }
 }
+
+main();
