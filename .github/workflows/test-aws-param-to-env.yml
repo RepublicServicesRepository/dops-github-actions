@@ -1,0 +1,38 @@
+on: [push]
+
+# Controls when the action will run. Triggers the workflow after a git push.
+on: push
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    name: Test AWS Param Store to ENV
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # - name: Setup VERSION Variable
+      #   run: echo "VERSION=$(echo $GITHUB_REF | awk -F "/" '{print $3}')" >> $GITHUB_ENV
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+      - uses: actions/checkout@v2
+
+      # Setup AWS Credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Test AWS Param Store Action
+        uses: ./actions/aws-param-to-env
+        id: AWSParamTest
+        with:
+          param-store-base-paths: /test
+
+      - name: Test GITHUB environment variables
+        run: echo ${{ env.API_KEY }}

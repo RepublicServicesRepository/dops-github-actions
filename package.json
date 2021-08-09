@@ -1,0 +1,23 @@
+{
+  "name": "dops-github-actions",
+  "version": "1.0.0",
+  "description": "Collection of custom actions used in DOPS projects.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RepublicServicesRepository/dops-github-actions.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RepublicServicesRepository/dops-github-actions/issues"
+  },
+  "homepage": "https://github.com/RepublicServicesRepository/dops-github-actions#readme",
+  "dependencies": {
+    "@actions/core": "^1.4.0",
+    "aws-sdk": "^2.963.0"
+  }
+}

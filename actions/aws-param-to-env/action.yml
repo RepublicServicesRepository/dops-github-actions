@@ -1,0 +1,5 @@
+name: 'AWS Params to ENV'
+description: 'Convert AWS Param Store values into ENV variables'
+runs:
+  using: 'node12'
+  main: 'index.js'
