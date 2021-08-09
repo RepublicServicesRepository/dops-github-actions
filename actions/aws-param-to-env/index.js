@@ -1,3 +1,4 @@
+const execSync = require('child_process').execSync;
 const core = require("@actions/core");
 const aws = require("aws-sdk");
 const ssm = new aws.SSM();
@@ -59,7 +60,12 @@ async function setParamsInEnvironment(path, params) {
       .replace(/^\//, "")
       .replace(/\//g, "_")
       .toUpperCase();
-    process.env[unixName] = param.Value;
+
+    // write the value into the github environment file
+    const processCommand = `echo "${unixName}=${param.Value}" >> $GITHUB_ENV`;
+    core.debug(`Running cmd: ${processCommand}`);
+    execSync(processCommand, {stdio: 'inherit'});
+
     if (param.Type !== "SecureString") {
       console.log(
         `parameter loaded: ${shortName} :: ${unixName} -- ${param.Value}`
