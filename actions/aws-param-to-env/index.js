@@ -43,9 +43,6 @@ async function getParamsByPath(path, decrypt) {
     NextToken = ssmResult.NextToken;
   } while (NextToken);
 
-  // careful with this, it appeats in the GITHUB logging
-  console.log(`Loaded parameters: ${JSON.stringify(parameters)}`);
-
   return parameters;
 }
 
@@ -63,14 +60,7 @@ async function setParamsInEnvironment(path, params) {
 
     // write the value into the github environment file
     const processCommand = `echo "${unixName}=${param.Value}" >> $GITHUB_ENV`;
-    core.debug(`Running cmd: ${processCommand}`);
     execSync(processCommand, {stdio: 'inherit'});
-
-    if (param.Type !== "SecureString") {
-      console.log(
-        `parameter loaded: ${shortName} :: ${unixName} -- ${param.Value}`
-      );
-    }
   }
 }
 
