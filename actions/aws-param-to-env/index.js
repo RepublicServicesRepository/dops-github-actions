@@ -52,15 +52,17 @@ async function getParamsByPath(path) {
  */
 async function setParamsInEnvironment(path, params) {
   for (const param of params) {
-    const shortName = param.Name.replace(path, "");
-    const unixName = shortName
-      .replace(/^\//, "")
-      .replace(/\//g, "_")
-      .toUpperCase();
-    process.env[unixName] = param.Value;
-    logger.debug(
-      `parameter loaded: ${shortName} :: ${unixName} -- ${param.Value}`
-    );
+    if (param.Type !== "SecureString") {
+      const shortName = param.Name.replace(path, "");
+      const unixName = shortName
+        .replace(/^\//, "")
+        .replace(/\//g, "_")
+        .toUpperCase();
+      process.env[unixName] = param.Value;
+      console.log(
+        `parameter loaded: ${shortName} :: ${unixName} -- ${param.Value}`
+      );
+    }
   }
 }
 
