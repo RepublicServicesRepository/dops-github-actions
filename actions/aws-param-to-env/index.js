@@ -1,4 +1,4 @@
-const execSync = require('child_process').execSync;
+const execSync = require("child_process").execSync;
 const core = require("@actions/core");
 const aws = require("aws-sdk");
 const ssm = new aws.SSM();
@@ -7,7 +7,7 @@ async function main() {
   try {
     console.log("Begin AWS Param To Env");
 
-    const debuLogging = core.getInput("debug-logging");
+    const debuLogging = core.getInput("debug-logging") === "true";
     const decryptSecureStrings =
       core.getInput("decrypt-secure-strings") === "true";
     const paramStoreBasePathInput = core.getInput("param-store-base-paths", {
@@ -15,10 +15,14 @@ async function main() {
     });
     const paramStoreBasePaths = paramStoreBasePathInput.split(",");
     for (const basePath of paramStoreBasePaths) {
-      const parameters = await getParamsByPath(basePath, decryptSecureStrings, debuLogging);
+      const parameters = await getParamsByPath(
+        basePath,
+        decryptSecureStrings,
+        debuLogging
+      );
       setParamsInEnvironment(basePath, parameters);
     }
-    
+
     console.log("End AWS Param To Env");
   } catch (error) {
     core.setFailed(error.message);
@@ -75,7 +79,7 @@ async function setParamsInEnvironment(path, params) {
 
     // write the value into the github environment file
     const processCommand = `echo "${unixName}=${param.Value}" >> $GITHUB_ENV`;
-    execSync(processCommand, {stdio: 'inherit'});
+    execSync(processCommand, { stdio: "inherit" });
   }
 }
 
