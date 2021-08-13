@@ -29,6 +29,7 @@ jobs:
         with:
           param-store-base-paths: /test
           decrypt-secure-strings: true
+          debug-logging: true
 
       # Test the outcome in the GITHUB env.
       # Be careful with this, as the values will end up in your Action logs.

@@ -6,6 +6,8 @@ const ssm = new aws.SSM();
 async function main() {
   try {
     console.log("Begin AWS Param To Env");
+
+    const debuLogging = core.getInput("debug-logging");
     const decryptSecureStrings =
       core.getInput("decrypt-secure-strings") === "true";
     const paramStoreBasePathInput = core.getInput("param-store-base-paths", {
@@ -13,21 +15,26 @@ async function main() {
     });
     const paramStoreBasePaths = paramStoreBasePathInput.split(",");
     for (const basePath of paramStoreBasePaths) {
-      const parameters = await getParamsByPath(basePath, decryptSecureStrings);
+      const parameters = await getParamsByPath(basePath, decryptSecureStrings, debuLogging);
       setParamsInEnvironment(basePath, parameters);
     }
+    
     console.log("End AWS Param To Env");
   } catch (error) {
     core.setFailed(error.message);
   }
 }
 
-async function getParamsByPath(path, decrypt) {
+async function getParamsByPath(path, decrypt, log) {
   const parameters = [];
   let ssmResult;
   let NextToken;
 
   do {
+    if (log) {
+      console.log(`Begin getParametersByPath: ${JSON.stringify(NextToken)}`);
+    }
+
     ssmResult = await ssm
       .getParametersByPath({
         NextToken,
@@ -37,11 +44,19 @@ async function getParamsByPath(path, decrypt) {
       })
       .promise();
 
+    if (log) {
+      console.log(`End getParametersByPath: ${JSON.stringify(ssmResult)}`);
+    }
+
     if (ssmResult.Parameters.length) {
       parameters.push(...ssmResult.Parameters);
     }
     NextToken = ssmResult.NextToken;
   } while (NextToken);
+
+  if (log) {
+    console.log(`Loaded parameters: ${JSON.stringify(parameters)}`);
+  }
 
   return parameters;
 }
