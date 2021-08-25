@@ -77,9 +77,9 @@ async function setParamsInEnvironment(path, params) {
       .replace(/\//g, "_")
       .toUpperCase();
 
-    // write the value into the github environment file
-    const processCommand = `echo "${unixName}=${param.Value}" >> $GITHUB_ENV`;
-    execSync(processCommand, { stdio: "inherit" });
+    // write the value out to the environment and register it as a secret, so github logs will mask it
+    core.exportVariable(unixName, param.Value);
+    core.setSecret(param.Value);
   }
 }
 
