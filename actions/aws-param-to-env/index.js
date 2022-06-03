@@ -53,8 +53,8 @@ async function getParamsByPath(path, decrypt, log) {
       } else {
         const safeToLogResults = ssmResult.Parameters.map(parameter => {
           let loggableParam = Object.assign({}, parameter);
-          if (parameter.Type === 'SecureString') {
-            parameter.Value = '***';
+          if (loggableParam.Type === 'SecureString') {
+            loggableParam.Value = '***';
           }
           return loggableParam;
         });
