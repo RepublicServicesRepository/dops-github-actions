@@ -6,7 +6,8 @@ async function main() {
   try {
     console.log("Begin AWS Param To Env");
 
-    const debuLogging = core.getInput("debug-logging") === "true";
+    const debuLogging = core.getInput("debug-logging") === "true";    
+    const maskValues = (core.getInput("mask-values") === "false") ? false : true; // default to masking everything
     const decryptSecureStrings =
       core.getInput("decrypt-secure-strings") === "true";
     const paramStoreBasePathInput = core.getInput("param-store-base-paths", {
@@ -19,7 +20,7 @@ async function main() {
         decryptSecureStrings,
         debuLogging
       );
-      setParamsInEnvironment(basePath, parameters);
+      setParamsInEnvironment(basePath, parameters, maskValues);
     }
 
     console.log("End AWS Param To Env");
@@ -69,7 +70,7 @@ async function getParamsByPath(path, decrypt, log) {
   } while (NextToken);
 
   if (log) {
-    console.log("Parameter load complete.");
+    console.log("Parameter path load complete.");
   }
 
   return parameters;
@@ -79,7 +80,7 @@ async function getParamsByPath(path, decrypt, log) {
  * Convert the heirarchical param name to a unix-style param name.
  * e.g. /test/api/key -> API_KEY
  */
-async function setParamsInEnvironment(path, params) {
+async function setParamsInEnvironment(path, params, maskValues) {
   for (const param of params) {
     const shortName = param.Name.replace(path, "");
     const unixName = shortName
@@ -87,9 +88,13 @@ async function setParamsInEnvironment(path, params) {
       .replace(/\//g, "_")
       .toUpperCase();
 
-    // write the value out to the environment and register it as a secret, so github logs will mask it
+    // write the value out to the environment 
     core.exportVariable(unixName, param.Value);
-    // core.setSecret(param.Value);
+
+    // register it as a secret, so github logs will mask it
+    if (maskValues) {
+      core.setSecret(param.Value);
+    }
   }
 }
 

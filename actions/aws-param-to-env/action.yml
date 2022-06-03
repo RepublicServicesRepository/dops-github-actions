@@ -7,6 +7,9 @@ inputs:
   decrypt-secure-strings:
     description: 'Optional flag to decrypt SecureString values. Set to true if desired and the value will cascade to the AWS call.'
     required: false
+  mask-values:
+    description: 'Optional flag to mask all values retrieved within Github logs.'
+    required: false
   debug-logging:
     description: 'Optional flag to output debug logging. If set to true Param Store values will be output to the console.'
     required: false
