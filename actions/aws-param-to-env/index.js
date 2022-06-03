@@ -51,14 +51,14 @@ async function getParamsByPath(path, decrypt, log) {
       if (!decrypt) {
         console.log(`End getParametersByPath: ${JSON.stringify(ssmResult)}`);
       } else {
-        const safeToLogResults = ssmResult.map(parameter => {
+        const safeToLogResults = ssmResult.Parameters.map(parameter => {
           let loggableParam = Object.assign({}, parameter);
           if (parameter.Type === 'SecureString') {
             parameter.Value = '***';
           }
           return loggableParam;
         });
-        console.log(`End getParametersByPath: ${JSON.stringify(safeToLogResults)}`);
+        console.log(`End getParametersByPath: ${JSON.stringify({ Parameters: safeToLogResults })}`);
       }
     }
 
