@@ -69,7 +69,7 @@ async function getParamsByPath(path, decrypt, log) {
   } while (NextToken);
 
   if (log) {
-    console.log(`Loaded parameters: ${JSON.stringify(parameters)}`);
+    console.log("Parameter load complete.");
   }
 
   return parameters;
