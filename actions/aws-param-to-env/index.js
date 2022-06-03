@@ -1,4 +1,3 @@
-const execSync = require("child_process").execSync;
 const core = require("@actions/core");
 const aws = require("aws-sdk");
 const ssm = new aws.SSM();
@@ -36,7 +35,7 @@ async function getParamsByPath(path, decrypt, log) {
 
   do {
     if (log) {
-      console.log(`Begin getParametersByPath: ${JSON.stringify(NextToken)}`);
+      console.log(`Begin getParametersByPath continued: ${!!NextToken}`);
     }
 
     ssmResult = await ssm
@@ -49,7 +48,18 @@ async function getParamsByPath(path, decrypt, log) {
       .promise();
 
     if (log) {
-      console.log(`End getParametersByPath: ${JSON.stringify(ssmResult)}`);
+      if (!decrypt) {
+        console.log(`End getParametersByPath: ${JSON.stringify(ssmResult)}`);
+      } else {
+        const safeToLogResults = ssmResult.map(parameter => {
+          let loggableParam = Object.assign({}, parameter);
+          if (parameter.Type === 'SecureString') {
+            parameter.Value = '***';
+          }
+          return loggableParam;
+        });
+        console.log(`End getParametersByPath: ${JSON.stringify(safeToLogResults)}`);
+      }
     }
 
     if (ssmResult.Parameters.length) {
@@ -79,7 +89,7 @@ async function setParamsInEnvironment(path, params) {
 
     // write the value out to the environment and register it as a secret, so github logs will mask it
     core.exportVariable(unixName, param.Value);
-    core.setSecret(param.Value);
+    // core.setSecret(param.Value);
   }
 }
 
