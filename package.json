@@ -18,6 +18,6 @@
   "homepage": "https://github.com/RepublicServicesRepository/dops-github-actions#readme",
   "dependencies": {
     "@actions/core": "^1.4.0",
-    "aws-sdk": "^2.963.0"
+    "aws-sdk": "^2.1309.0"
   }
 }
