@@ -14,5 +14,5 @@ inputs:
     description: 'Optional flag to output debug logging. If set to true Param Store values will be output to the console.'
     required: false
 runs:
-  using: 'node12'
+  using: 'node20'
   main: 'index.js'
