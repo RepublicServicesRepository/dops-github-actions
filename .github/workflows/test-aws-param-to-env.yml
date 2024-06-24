@@ -1,5 +1,7 @@
 # Controls when the action will run. Triggers the workflow after a git push.
-on: [push]
+on:
+  workflow_dispatch:
+  push:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -24,7 +26,8 @@ jobs:
           aws-region: us-west-2
 
       - name: Test AWS Param Store Action
-        uses: ./actions/aws-param-to-env
+        uses: RepublicServicesRepository/gha-aws-param-to-env@US117138-amosmi
+        # uses: ./actions/aws-param-to-env
         id: AWSParamTest
         with:
           param-store-base-paths: /test
