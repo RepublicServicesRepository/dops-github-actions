@@ -1,0 +1,22 @@
+name: rally checks
+on: 
+  pull_request:
+    types:
+        - opened
+        - reopened
+        - edited
+jobs:
+  check-rally-integration:
+    runs-on: 
+      group: digital-operations
+    name: check-rally-artifact
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: check-rally-artifact
+        uses: RepublicServicesRepository/gha-rally-integration@v1.0.0
+        id: rally-integration
+        with:
+            github_token: ${{ secrets.REPUBLIC_SYSTEM_RISE_PAT }}
+            rally_api_key: ${{secrets.RALLY_API_KEY}}
+            config_file_path: ".github/rally.yml"
