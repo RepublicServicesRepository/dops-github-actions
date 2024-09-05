@@ -1,0 +1,72 @@
+---
+# Name of the GitHub Check
+checksName: integrations/rally
+
+# Check PR Body for Rally story/defect (true | false)
+checkPRBody: false
+
+# Check PR Title for Rally story/defect (true | false)
+checkPRTitle: true
+
+# Check all commit messages for a Rally story/defect (true | false)
+checkCommitMessages: false
+
+# Set Rally Flow State to Complete on merge if the PR Body contains "/completes <DEFECT/STORY ID>"
+mergeOnPRBody: true
+
+# Comment on the PR in addition to the check message? (true | false)
+commentOnPull: false
+
+rally:
+  server: https://rally1.rallydev.com
+
+  ## Leave these blank if you use an API key
+  ##username: rallyUser
+  ##password: rallyPass
+  ## This is required if we don't use username/password
+  ## NOTE: If you set this in your .env file then you can
+  ## leave this commented out. It will override your .env
+  #api_key: _1234abc567...
+
+  # Which workspace OID this repo will link to
+  workspace: 35536700027
+
+  # Which projects this repo will link to.
+  # To have it connect to any project, leave this value blank
+  # Optional - Leave it commented or set to `Any` to allow from any
+  #            project in the workspace
+  projects:
+    - A.S.E.
+    - Collision Avoidance
+    - Dark Side
+    - DevOps
+    - dRoidS
+    - Maintenance Mavericks
+    - Operations and Maintenance
+    - RISE Atomic
+    - RISE chaos Theory
+    - RISE Guardians
+    - RISE NFR
+    - Route Rangers
+    - Team Felix
+    - TOGA
+    - TVA (Time Variance Authority)
+    - Velocity Raptors
+    - Piranha
+    - Waste Wizards
+    - Trash Angels
+
+  # List of valid Rally objects to check
+  objects:
+    - defect
+    #- defectsuite
+    #- task
+    #- testcase
+    #- hierarchicalrequirement
+    - userstory
+    #- story
+
+  # List of Rally states that an issue must be in in order to pass
+  states:
+    - Defined
+    - In-Progress
