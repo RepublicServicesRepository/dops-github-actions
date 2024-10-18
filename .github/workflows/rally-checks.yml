@@ -6,7 +6,6 @@ on:
       - reopened
       - edited
       - synchronize
-      - synchronize
 jobs:
   check-rally-integration:
     name: check-rally-artifact
