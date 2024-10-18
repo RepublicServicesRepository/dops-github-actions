@@ -1,14 +1,15 @@
 name: rally checks
-on: 
+on:
   pull_request:
     types:
-        - opened
-        - reopened
-        - edited
+      - opened
+      - reopened
+      - edited
+      - synchronize
 jobs:
   check-rally-integration:
     name: check-rally-artifact
-    uses:  RepublicServicesRepository/dops-gha-rally-integration/.github/workflows/workflow.yml@v1.0.0
+    uses: RepublicServicesRepository/dops-gha-rally-integration/.github/workflows/workflow.yml@v1.0.0
     secrets:
-        github_pat: ${{ secrets.REPUBLIC_SYSTEM_RISE_PAT }}
-        rally_api_key: ${{secrets.RALLY_API_KEY}}
+      github_pat: ${{ secrets.REPUBLIC_SYSTEM_RISE_PAT }}
+      rally_api_key: ${{secrets.RALLY_API_KEY}}
