@@ -1,0 +1,21 @@
+---
+version: 1
+service:
+  name: Dops Github Actions
+  lifecycle: generally_available
+  tier: tier_2
+  product: Dops GitHub Acctions
+  owner: rise
+  system: rise_backend
+  language: Node.js
+  description:
+  aliases:
+  repositories:
+    - name: RepublicServicesRepository/dops-github-actions
+      path: '/'
+      provider: github
+  tools:
+  dependencies: exempt
+  alert_sources:
+  properties:
+    additional_product_s:
