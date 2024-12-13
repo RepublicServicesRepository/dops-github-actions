@@ -10,12 +10,15 @@ service:
   language: Node.js
   description:
   aliases:
+  tags:
+    - key: dependencies
+      value: exempt
   repositories:
     - name: RepublicServicesRepository/dops-github-actions
       path: '/'
       provider: github
   tools:
-  dependencies: exempt
+  dependencies:
   alert_sources:
   properties:
     additional_product_s:
