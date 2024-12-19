@@ -7,9 +7,12 @@ service:
   product: Dops GitHub Acctions
   owner: rise
   system: rise_backend
-  language: Node.js
+  language: Javascript
+  framework: Node.js
   description:
   aliases:
+    - dops-github-actions
+    - dops_github_actions
   tags:
     - key: dependencies
       value: exempt
