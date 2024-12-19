@@ -12,6 +12,7 @@ service:
   description:
   aliases:
     - dops-github-actions
+    - dops_github_actions
   tags:
     - key: dependencies
       value: exempt
