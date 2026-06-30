@@ -1,0 +1,12 @@
+# For more information regarding this file configuration, please review
+# https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners
+
+* @RepublicServicesRepository/RiseDevelopers
+
+/.github/** @RepublicServicesRepository/RiseDevOps
+/infrastructure/** @RepublicServicesRepository/RiseDevOps
+/actions/** @RepublicServicesRepository/RiseDevOps
+serverless* @RepublicServicesRepository/RiseDevOps @RepublicServicesRepository/RiseDevLeads
+sonar-project.properties @RepublicServicesRepository/RiseDevOps @RepublicServicesRepository/RiseDevLeads
+**/.eslint* @RepublicServicesRepository/RiseDevOps @RepublicServicesRepository/RiseDevLeads
+**/.prettier* @RepublicServicesRepository/RiseDevOps @RepublicServicesRepository/RiseDevLeads
