@@ -1,0 +1,38 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# INTENTIONAL — DO NOT REMOVE OR EDIT
+#
+# This repository requires pnpm. If you are reading this because bun errored
+# with "lockfile had changes, but lockfile is frozen" — that is intentional.
+# Switch to pnpm:
+#
+#   npm install -g pnpm@11.9.0
+#   pnpm install
+#
+# ── Why frozenLockfile = true + sentinel bun.lock ────────────────────────────
+# bun 1.x downloads and extracts packages to node_modules BEFORE running the
+# root package's "preinstall" lifecycle script.  This means our preinstall
+# guard in bin/check-package-manager.mjs only fires AFTER potentially malicious
+# packages have already been written to disk — defeating the supply-chain
+# protections in pnpm-workspace.yaml.
+#
+# When no bun.lock exists, frozenLockfile = true has no reference to compare
+# against, so bun creates a fresh lockfile and proceeds with the install.
+#
+# The fix: a committed sentinel bun.lock with no packages.  On every run:
+#   1. bun reads the sentinel and finds it does not match package.json deps.
+#   2. frozenLockfile = true causes bun to abort BEFORE any downloads.
+#
+# For the --no-frozen-lockfile bypass, bun overwrites the sentinel, downloads
+# packages, and then runs the preinstall script.  The preinstall script cleans
+# up node_modules, removes bun-injected overrides from package.json, and
+# restores the sentinel bun.lock via "git checkout -- bun.lock" so the next
+# plain "bun install" is blocked again.
+#
+# NOTE: [run] shell sets the interpreter for "bun run <script>" commands only.
+# It has no effect on "bun install" and is NOT a pre-install hook.
+#
+# pnpm does not read bunfig.toml and is completely unaffected by this file.
+# ─────────────────────────────────────────────────────────────────────────────
+
+[install]
+frozenLockfile = true

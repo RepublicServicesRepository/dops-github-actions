@@ -1,0 +1,52 @@
+packages:
+  - '.'
+
+# Only these packages are permitted to run install/postinstall lifecycle scripts.
+# pnpm v11 ERRORS if a package outside this map requests a build script — add
+# packages here as `pnpm install` reports ERR_PNPM_BUILD_SCRIPTS_BLOCKED.
+# aws-sdk v2 runs a postinstall that only prints a maintenance-mode notice.
+allowBuilds:
+  aws-sdk: true
+
+# ── Dependency Overrides ──────────────────────────────────────────────────────
+# Populate from the Phase 7 `pnpm audit` loop. pnpm v11 reads overrides ONLY from
+# here, not from package.json. Selector `pkg>dep` scopes to a chain (direct parent
+# only); flat `dep` forces all consumers.
+# This action BUNDLES its deps into dist/index.js via ncc, so these overrides also
+# determine what ships in the built artifact — rebuild (`pnpm run build`) after changing them.
+# undici (via @actions/core>@actions/http-client): multiple high/moderate advisories, all fixed
+# in >=6.27.0 (stays within the 6.x line http-client targets). uuid (via aws-sdk): aws-sdk calls
+# the named require('uuid').v4(), stable v8→v11, so >=11.1.1 clears GHSA-w5hq-g745-h8pq safely.
+overrides:
+  undici: '>=6.27.0'
+  uuid: '>=11.1.1'
+
+# ── Supply Chain Security ──────────────────────────────────────
+# These are FLAT root-level keys. pnpm-workspace.yaml has NO `settings:` wrapper;
+# nesting them under a `settings:` key makes pnpm silently ignore them.
+# Block packages depending on git/tarball URLs or local paths as transitive deps.
+blockExoticSubdeps: true
+
+# Quarantine: require packages published >= 7 days before install. The value is a
+# bare integer of MINUTES — a string like '10080 minutes' parses to NaN and is ignored.
+minimumReleaseAge: 10080 # 7 days
+
+# Only affects version SELECTION, not the verification pass. Default is true when
+# minimumReleaseAge is set, which HARD-FAILS resolution; false prefers aged versions
+# but falls back to the newest instead of failing.
+minimumReleaseAgeStrict: false
+
+# ── Performance ───────────────────────────────────────────
+# Double the default concurrent HTTP download slots (default 16).
+networkConcurrency: 32
+
+# Skip re-verifying the committed lockfile against the supply-chain policies on every
+# `pnpm install --frozen-lockfile` and every `pnpm run <script>`. Without this, a valid
+# minimumReleaseAge re-checks the lockfile at runtime and FAILS whenever it contains a
+# package younger than the cutoff. Requires pnpm >= 11.3.0 (silently ignored on older).
+trustLockfile: true
+
+# typescript-eslint is a peer dep of the shared eslint flat-config; hoist it to the
+# root so eslint.config.staged.mjs resolves it under pnpm's strict node_modules layout.
+publicHoistPattern:
+  - 'typescript-eslint'

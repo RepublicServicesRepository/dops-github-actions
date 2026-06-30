@@ -1,0 +1,14 @@
+// INTENTIONAL SENTINEL — DO NOT UPDATE OR DELETE.
+// This file is intentionally empty (no packages) so that "bun install" always
+// fails the frozenLockfile check before downloading anything.
+// See bunfig.toml for a full explanation.
+// pnpm does not read this file and is completely unaffected.
+{
+  "lockfileVersion": 0,
+  "workspaces": {
+    "": {
+      "name": "dops-github-actions",
+    },
+  },
+  "packages": {},
+}
