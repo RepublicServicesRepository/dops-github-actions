@@ -9,7 +9,7 @@ on:
 jobs:
   check-rally-integration:
     name: check-rally-artifact
-    uses: RepublicServicesRepository/dops-gha-rally-integration/.github/workflows/workflow.yml@v2.0.0
+    uses: RepublicServicesRepository/dops-actions/.github/workflows/rally-integration.yml@stable
     secrets:
       github_pat: ${{ secrets.REPUBLIC_SYSTEM_RISE_PAT }}
       rally_api_key: ${{secrets.RALLY_API_KEY}}

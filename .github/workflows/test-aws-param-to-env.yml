@@ -13,11 +13,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: RepublicServicesRepository/dops-actions/oss/actions/checkout@stable
 
       # Setup AWS Credentials
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: RepublicServicesRepository/dops-actions/oss/aws-actions/configure-aws-credentials@stable
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
